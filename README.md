@@ -2,7 +2,7 @@ Hmm
 
 # Build
 
-<code>cmake && make</code>
+<code>cmake ./ && make</code>
 
 thats it i guess
 also tested only on linux
