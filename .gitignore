@@ -1,0 +1,10 @@
+/.cache
+/.kdev4
+/CMakeCache.txt
+/CMakeFiles
+/CMakeLists.txt
+/Makefile
+/build
+/cmake_install.cmake
+/sierpinsky
+/sierpinsky.kdev4
