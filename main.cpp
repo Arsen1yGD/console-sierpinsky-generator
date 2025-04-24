@@ -290,18 +290,18 @@ Settings check_args(std::vector<std::string> &args) {
 
 int main(int argc, char *argv[]) {
 
-  std::vector<std::string> findArgs = {};
+  std::vector<std::string> args = {};
 
   std::string program_name = argv[0];
 
   for (int i = 1; i < argc; i++) {
-    findArgs.push_back(argv[i]);
+    args.push_back(argv[i]);
   }
 
-  if (std::find_if(findArgs.begin(), findArgs.end(), [](auto &x) {
+  if (std::find_if(args.begin(), args.end(), [](auto &x) {
         std::transform(x.begin(), x.end(), x.begin(), ::tolower);
         return x == "-h" || x == "--help";
-      }) != findArgs.end()) {
+      }) != args.end()) {
     std::cout << std::format("Usage: {} [OPTIONS]", program_name) << std::endl;
     std::cout << std::endl << "Avaiable options:" << std::endl;
     std::cout << "-s, --size      size of the console image (default: 6)"
@@ -333,7 +333,7 @@ int main(int argc, char *argv[]) {
   Settings settings;
 
   try {
-    settings = check_args(findArgs);
+    settings = check_args(args);
   } catch (int exception) {
     return exception;
   }
