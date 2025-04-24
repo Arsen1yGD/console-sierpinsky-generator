@@ -103,21 +103,27 @@ void print_bitmap(const std::vector<std::vector<bool>> &bitmap,
 
 Settings check_args(std::vector<std::string> &args) {
 
-  // Настройки
   Settings settings = {};
 
-  if (auto found = std::find_if(args.begin(), args.end(),
+  std::vector<std::string> findArgs = {}; // #1
+
+  for (auto &arg : findArgs) {
+    std::transform(arg.begin(), arg.end(), arg.begin(),
+                                                 ::tolower);
+  }
+
+  if (auto found = std::find_if(findArgs.begin(), findArgs.end(),
                                 [](auto &x) {
                                   std::transform(x.begin(), x.end(), x.begin(),
                                                  ::tolower);
                                   return x == "-s" || x == "--size";
                                 });
-      found != args.end()) {
-    int flagPos = found - args.begin();
+      found != findArgs.end()) {
+    int flagPos = found - findArgs.begin();
 
-    if (flagPos + 1 < args.size()) {
+    if (flagPos + 1 < findArgs.size()) {
 
-      std::string value = args[flagPos + 1];
+      std::string value = findArgs[flagPos + 1];
 
       int parsed = 6;
 
@@ -166,17 +172,17 @@ Settings check_args(std::vector<std::string> &args) {
     }
   }
 
-  if (auto found = std::find_if(args.begin(), args.end(),
+  if (auto found = std::find_if(findArgs.begin(), findArgs.end(),
                                 [](auto &x) {
                                   std::transform(x.begin(), x.end(), x.begin(),
                                                  ::tolower);
                                   return x == "-f" || x == "--fill";
                                 });
-      found != args.end()) {
-    int flagPos = found - args.begin();
+      found != findArgs.end()) {
+    int flagPos = found - findArgs.begin();
 
-    if (flagPos + 1 < args.size()) {
-      std::string value = args[flagPos + 1];
+    if (flagPos + 1 < findArgs.size()) {
+      std::string value = findArgs[flagPos + 1];
 
       if (utf8::distance(value.begin(), value.end()) != 1) {
         std::cout << std::format("Character's \"{}\" length shall be 1.", value)
@@ -193,17 +199,17 @@ Settings check_args(std::vector<std::string> &args) {
 
   settings.flips = 0;
 
-  if (auto found = std::find_if(args.begin(), args.end(),
+  if (auto found = std::find_if(findArgs.begin(), findArgs.end(),
                                 [](auto &x) {
                                   std::transform(x.begin(), x.end(), x.begin(),
                                                  ::tolower);
                                   return x == "-e" || x == "--empty";
                                 });
-      found != args.end()) {
-    int flagPos = found - args.begin();
+      found != findArgs.end()) {
+    int flagPos = found - findArgs.begin();
 
-    if (flagPos + 1 < args.size()) {
-      std::string value = args[flagPos + 1];
+    if (flagPos + 1 < findArgs.size()) {
+      std::string value = findArgs[flagPos + 1];
 
       if (utf8::distance(value.begin(), value.end()) != 1) {
         std::cout << std::format("Character's \"{}\" length shall be 1.", value)
@@ -218,38 +224,38 @@ Settings check_args(std::vector<std::string> &args) {
     }
   }
 
-  if (std::find_if(args.begin(), args.end(), [](auto &x) {
+  if (std::find_if(findArgs.begin(), findArgs.end(), [](auto &x) {
         std::transform(x.begin(), x.end(), x.begin(), ::tolower);
         return x == "-fx" || x == "--flipx";
-      }) != args.end()) {
+      }) != findArgs.end()) {
     settings.flips |= 0b10;
   }
 
-  if (std::find_if(args.begin(), args.end(), [](auto &x) {
+  if (std::find_if(findArgs.begin(), findArgs.end(), [](auto &x) {
         std::transform(x.begin(), x.end(), x.begin(), ::tolower);
         return x == "-fy" || x == "--flipx";
-      }) != args.end()) {
+      }) != findArgs.end()) {
     settings.flips |= 0b1;
   }
 
-  if (std::find_if(args.begin(), args.end(), [](auto &x) {
+  if (std::find_if(findArgs.begin(), findArgs.end(), [](auto &x) {
         std::transform(x.begin(), x.end(), x.begin(), ::tolower);
         return x == "-d" || x == "--doubled";
-      }) != args.end()) {
+      }) != findArgs.end()) {
     settings.doubled = true;
   }
 
-  if (auto found = std::find_if(args.begin(), args.end(),
+  if (auto found = std::find_if(findArgs.begin(), findArgs.end(),
                                 [](auto &x) {
                                   std::transform(x.begin(), x.end(), x.begin(),
                                                  ::tolower);
                                   return x == "-c" || x == "--color";
                                 });
-      found != args.end()) {
-    int flagPos = found - args.begin();
+      found != findArgs.end()) {
+    int flagPos = found - findArgs.begin();
 
-    if (flagPos + 1 < args.size()) {
-      std::string value = args[flagPos + 1];
+    if (flagPos + 1 < findArgs.size()) {
+      std::string value = findArgs[flagPos + 1];
 
       std::transform(value.begin(), value.end(), value.begin(), ::tolower);
 
@@ -284,18 +290,18 @@ Settings check_args(std::vector<std::string> &args) {
 
 int main(int argc, char *argv[]) {
 
-  std::vector<std::string> args = {};
+  std::vector<std::string> findArgs = {};
 
   std::string program_name = argv[0];
 
   for (int i = 1; i < argc; i++) {
-    args.push_back(argv[i]);
+    findArgs.push_back(argv[i]);
   }
 
-  if (std::find_if(args.begin(), args.end(), [](auto &x) {
+  if (std::find_if(findArgs.begin(), findArgs.end(), [](auto &x) {
         std::transform(x.begin(), x.end(), x.begin(), ::tolower);
         return x == "-h" || x == "--help";
-      }) != args.end()) {
+      }) != findArgs.end()) {
     std::cout << std::format("Usage: {} [OPTIONS]", program_name) << std::endl;
     std::cout << std::endl << "Avaiable options:" << std::endl;
     std::cout << "-s, --size      size of the console image (default: 6)"
@@ -327,7 +333,7 @@ int main(int argc, char *argv[]) {
   Settings settings;
 
   try {
-    settings = check_args(args);
+    settings = check_args(findArgs);
   } catch (int exception) {
     return exception;
   }
