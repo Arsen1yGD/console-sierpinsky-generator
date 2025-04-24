@@ -105,25 +105,18 @@ Settings check_args(std::vector<std::string> &args) {
 
   Settings settings = {};
 
-  std::vector<std::string> findArgs = {}; // #1
-
-  for (auto &arg : findArgs) {
-    std::transform(arg.begin(), arg.end(), arg.begin(),
-                                                 ::tolower);
-  }
-
-  if (auto found = std::find_if(findArgs.begin(), findArgs.end(),
-                                [](auto &x) {
+  if (auto found = std::find_if(args.begin(), args.end(),
+                                [](auto x) {
                                   std::transform(x.begin(), x.end(), x.begin(),
                                                  ::tolower);
                                   return x == "-s" || x == "--size";
                                 });
-      found != findArgs.end()) {
-    int flagPos = found - findArgs.begin();
+      found != args.end()) {
+    int flagPos = found - args.begin();
 
-    if (flagPos + 1 < findArgs.size()) {
+    if (flagPos + 1 < args.size()) {
 
-      std::string value = findArgs[flagPos + 1];
+      std::string value = args[flagPos + 1];
 
       int parsed = 6;
 
@@ -172,17 +165,17 @@ Settings check_args(std::vector<std::string> &args) {
     }
   }
 
-  if (auto found = std::find_if(findArgs.begin(), findArgs.end(),
-                                [](auto &x) {
+  if (auto found = std::find_if(args.begin(), args.end(),
+                                [](auto x) {
                                   std::transform(x.begin(), x.end(), x.begin(),
                                                  ::tolower);
                                   return x == "-f" || x == "--fill";
                                 });
-      found != findArgs.end()) {
-    int flagPos = found - findArgs.begin();
+      found != args.end()) {
+    int flagPos = found - args.begin();
 
-    if (flagPos + 1 < findArgs.size()) {
-      std::string value = findArgs[flagPos + 1];
+    if (flagPos + 1 < args.size()) {
+      std::string value = args[flagPos + 1];
 
       if (utf8::distance(value.begin(), value.end()) != 1) {
         std::cout << std::format("Character's \"{}\" length shall be 1.", value)
@@ -199,17 +192,17 @@ Settings check_args(std::vector<std::string> &args) {
 
   settings.flips = 0;
 
-  if (auto found = std::find_if(findArgs.begin(), findArgs.end(),
-                                [](auto &x) {
+  if (auto found = std::find_if(args.begin(), args.end(),
+                                [](auto x) {
                                   std::transform(x.begin(), x.end(), x.begin(),
                                                  ::tolower);
                                   return x == "-e" || x == "--empty";
                                 });
-      found != findArgs.end()) {
-    int flagPos = found - findArgs.begin();
+      found != args.end()) {
+    int flagPos = found - args.begin();
 
-    if (flagPos + 1 < findArgs.size()) {
-      std::string value = findArgs[flagPos + 1];
+    if (flagPos + 1 < args.size()) {
+      std::string value = args[flagPos + 1];
 
       if (utf8::distance(value.begin(), value.end()) != 1) {
         std::cout << std::format("Character's \"{}\" length shall be 1.", value)
@@ -224,38 +217,38 @@ Settings check_args(std::vector<std::string> &args) {
     }
   }
 
-  if (std::find_if(findArgs.begin(), findArgs.end(), [](auto &x) {
+  if (std::find_if(args.begin(), args.end(), [](auto x) {
         std::transform(x.begin(), x.end(), x.begin(), ::tolower);
         return x == "-fx" || x == "--flipx";
-      }) != findArgs.end()) {
+      }) != args.end()) {
     settings.flips |= 0b10;
   }
 
-  if (std::find_if(findArgs.begin(), findArgs.end(), [](auto &x) {
+  if (std::find_if(args.begin(), args.end(), [](auto x) {
         std::transform(x.begin(), x.end(), x.begin(), ::tolower);
         return x == "-fy" || x == "--flipx";
-      }) != findArgs.end()) {
+      }) != args.end()) {
     settings.flips |= 0b1;
   }
 
-  if (std::find_if(findArgs.begin(), findArgs.end(), [](auto &x) {
+  if (std::find_if(args.begin(), args.end(), [](auto x) {
         std::transform(x.begin(), x.end(), x.begin(), ::tolower);
         return x == "-d" || x == "--doubled";
-      }) != findArgs.end()) {
+      }) != args.end()) {
     settings.doubled = true;
   }
 
-  if (auto found = std::find_if(findArgs.begin(), findArgs.end(),
-                                [](auto &x) {
+  if (auto found = std::find_if(args.begin(), args.end(),
+                                [](auto x) {
                                   std::transform(x.begin(), x.end(), x.begin(),
                                                  ::tolower);
                                   return x == "-c" || x == "--color";
                                 });
-      found != findArgs.end()) {
-    int flagPos = found - findArgs.begin();
+      found != args.end()) {
+    int flagPos = found - args.begin();
 
-    if (flagPos + 1 < findArgs.size()) {
-      std::string value = findArgs[flagPos + 1];
+    if (flagPos + 1 < args.size()) {
+      std::string value = args[flagPos + 1];
 
       std::transform(value.begin(), value.end(), value.begin(), ::tolower);
 
@@ -298,7 +291,7 @@ int main(int argc, char *argv[]) {
     args.push_back(argv[i]);
   }
 
-  if (std::find_if(args.begin(), args.end(), [](auto &x) {
+  if (std::find_if(args.begin(), args.end(), [](auto x) {
         std::transform(x.begin(), x.end(), x.begin(), ::tolower);
         return x == "-h" || x == "--help";
       }) != args.end()) {
